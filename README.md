@@ -1,73 +1,76 @@
-# React + TypeScript + Vite
+# Cold Email SOP Checklist
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Web app for running through the Tedia Cold Email SOP one campaign at a time. Each campaign is a "run" — a fresh checklist instance with its own progress and notes.
 
-Currently, two official plugins are available:
+**Live:** https://cold-email-sop-checklist.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What it does
 
-## React Compiler
+The cold email SOP has 8 phases (Close Out Last → Strategy → Targeting → Copy → Tech → Send → Monitor → Post-Mortem) with 33 checklist items total. Each item expands to show the summary, ordered steps, and notes from the SOP.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+This app turns that SOP into a trackable workflow:
+- Create a run per campaign
+- Tick items as you complete them
+- Watch the progress bar fill
+- Come back later — state persists in your browser
 
-## Expanding the ESLint configuration
+## How to use it
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Open https://cold-email-sop-checklist.vercel.app
+2. Click **+ new run** — names it with today's date by default
+3. Rename it (e.g. `2026-Q2 enterprise outbound`) and add a one-line description
+4. Work top to bottom. Click any item to expand the detail panel with the SOP steps
+5. Check items off as you finish them. Progress bar at the top updates live
+6. Leave and come back — your run is saved in localStorage on this browser
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Multiple runs
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+The home page (`/`) lists every run with completion %. Click one to open it (`/run/:id`). Use **+ new run** to start another campaign without losing the previous one. **reset** clears checkboxes on the current run; **delete** removes it entirely.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Storage caveats
+
+- Data lives in your browser's localStorage under key `cold-email-sop-runs-v1`
+- Clearing site data wipes all runs
+- Runs do not sync across devices or browsers
+- No backend, no auth, no analytics
+
+## Stack
+
+- Vite + React 19 + TypeScript
+- React Router v7
+- Plain CSS with the dark-theme variables from the original HTML prototype
+- localStorage for persistence
+- Deployed on Vercel
+
+## Local development
+
+```bash
+npm install
+npm run dev      # localhost:5173
+npm run build    # type-check + production bundle
+npm run preview  # serve the built bundle
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Project structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+  checklist-data.ts   # all section/item content from the SOP
+  pages/
+    Home.tsx          # run list at /
+    RunPage.tsx       # individual checklist at /run/:id
+  storage.ts          # localStorage helpers
+  App.tsx             # router
+```
+
+To edit checklist content, change [src/checklist-data.ts](src/checklist-data.ts) and redeploy.
+
+## Deployment
+
+Pushes to `master` auto-deploy on Vercel. Manual:
+
+```bash
+vercel --prod
+```
+
+`vercel.json` rewrites all paths to `index.html` so `/run/:id` deep links work.

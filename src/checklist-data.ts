@@ -23,7 +23,7 @@ export const SECTIONS: Section[] = [
       {
         id: "post-mortem",
         label: "post-mortem last campaign",
-        icon: "https://img.icons8.com/color/48/autopsy.png",
+        icon: "https://img.icons8.com/color/48/inspection.png",
         summary: "Run Post-Mortem SOP end-to-end on prior campaign before planning next.",
         steps: [
           "log + finalize metrics",
@@ -70,7 +70,7 @@ export const SECTIONS: Section[] = [
       {
         id: "funnel-parts",
         label: "pick funnel parts (lead magnet, offer)",
-        icon: "https://img.icons8.com/color/48/funnel.png",
+        icon: "https://img.icons8.com/color/48/filter.png",
         summary: "Concrete things funnel routes through.",
         steps: [
           "pick lead magnet",
@@ -167,7 +167,7 @@ export const SECTIONS: Section[] = [
   {
     id: "copy",
     title: "Copy",
-    icon: "https://img.icons8.com/color/48/quill-pen.png",
+    icon: "https://img.icons8.com/color/48/pen.png",
     items: [
       {
         id: "spam-law",
