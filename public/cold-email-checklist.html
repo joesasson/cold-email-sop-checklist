@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Cold Email Checklist</title>
+<style>
+  :root{
+    --bg:#0b0f14; --panel:#11181f; --line:#1f2a36;
+    --ink:#e7eef5; --mute:#8aa0b4;
+    --accent:#7cf0c6;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,sans-serif}
+  main{max-width:720px;margin:0 auto;padding:24px}
+  h1{font-size:18px;margin:0 0 16px;letter-spacing:.3px;display:flex;align-items:center;gap:10px}
+  h1 img{width:24px;height:24px}
+  h2{font-size:13px;margin:28px 0 8px;color:var(--mute);text-transform:uppercase;letter-spacing:.8px;font-weight:600;display:flex;align-items:center;gap:8px}
+  h2 img{width:18px;height:18px;opacity:.85}
+  .bar-wrap{position:sticky;top:0;background:var(--bg);padding:12px 0 16px;z-index:10;border-bottom:1px solid var(--line);margin-bottom:8px}
+  .bar{height:6px;background:var(--panel);border-radius:99px;overflow:hidden}
+  .bar > div{height:100%;background:var(--accent);transition:width .25s;width:0%}
+  .count{font-size:12px;color:var(--mute);margin-top:6px;display:flex;justify-content:space-between;align-items:center}
+  ul{list-style:none;padding:0;margin:0}
+  li{border-radius:8px;border:1px solid transparent;margin-bottom:2px}
+  li:hover{border-color:var(--line)}
+  li.open{background:var(--panel);border-color:var(--line)}
+  li .row{display:flex;align-items:center;gap:12px;padding:10px 12px;cursor:pointer}
+  li .row input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+  li .row img.icon{width:24px;height:24px;flex-shrink:0;transition:filter .2s,opacity .2s}
+  li .row .label{flex:1}
+  li .row .chev{color:var(--mute);font-size:14px;flex-shrink:0;transition:transform .2s;line-height:1}
+  li.open .row .chev{transform:rotate(90deg);color:var(--accent)}
+  li.done .row .label{color:var(--mute);text-decoration:line-through}
+  li.done .row img.icon{filter:grayscale(1);opacity:.4}
+  .detail{padding:0 14px 14px 50px;font-size:13.5px;color:var(--mute)}
+  .detail .summary{margin:0 0 8px;color:var(--ink);opacity:.85}
+  .detail ol{margin:0;padding-left:18px}
+  .detail ol li{padding:3px 0;line-height:1.5;border:none;margin:0}
+  .detail ol li:hover{border:none}
+  .detail .note{margin-top:8px;padding:8px 10px;background:var(--bg);border-left:2px solid var(--accent);border-radius:4px;font-size:12.5px;color:var(--ink);opacity:.85}
+  button.reset,button.dup,button.del{background:none;border:1px solid var(--line);color:var(--mute);padding:4px 10px;border-radius:6px;cursor:pointer;font:inherit;font-size:12px}
+  button.reset:hover,button.dup:hover,button.del:hover{color:var(--ink);border-color:var(--mute)}
+  button.dup{border-color:var(--accent);color:var(--accent)}
+  button.dup:hover{background:rgba(124,240,198,.08);color:var(--accent);border-color:var(--accent)}
+  .actions{display:flex;gap:8px;align-items:center}
+  .instance{margin-top:40px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+  .instance .meta{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+  .instance .stamp{font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums;letter-spacing:.4px}
+  .instance input.title,.instance textarea.desc{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--ink);font:inherit;padding:10px 12px;border-radius:6px;margin-bottom:8px}
+  .instance input.title{font-size:16px;font-weight:600;letter-spacing:.2px}
+  .instance textarea.desc{resize:vertical;min-height:52px;font-size:13px;color:var(--mute);margin-bottom:14px}
+  .instance textarea.desc:focus,.instance input.title:focus{outline:none;border-color:var(--accent);color:var(--ink)}
+  .instance .bar-wrap{position:static;border:none;padding:0 0 14px;margin:0}
+  label.hide-done{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--mute);user-select:none}
+  label.hide-done input{width:14px;height:14px;accent-color:var(--accent);cursor:pointer;margin:0;flex-shrink:0}
+  label.hide-done:hover{color:var(--ink)}
+  body.hide-completed main > ul > li.done,
+  body.hide-completed .instance > ul > li.done{display:none}
+</style>
+</head>
+<body>
+<main>
+  <h1><img src="https://img.icons8.com/color/48/secured-letter.png" alt="">Cold Email Checklist</h1>
+  <div class="bar-wrap">
+    <div class="bar"><div id="fill"></div></div>
+    <div class="count"><span id="count">0 / 0</span><div class="actions"><label class="hide-done" title="Hide checked rows everywhere"><input type="checkbox" id="hideDone"> hide completed</label><button class="dup" onclick="duplicate()">+ new run</button><button class="reset" onclick="reset()">reset</button></div></div>
+  </div>
+
+  <h2><img src="https://img.icons8.com/color/48/end-call.png" alt="">Close Out Last</h2>
+  <ul>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/inspection.png" alt=""><span class="label">post-mortem last campaign</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Run Post-Mortem SOP end-to-end on prior campaign before planning next.</p>
+        <ol>
+          <li>log + finalize metrics</li>
+          <li>add unsubs to blocklist</li>
+          <li>mark campaign completed + set end date</li>
+          <li>diagnose what drove results</li>
+          <li>note 2–3 ideas for next campaign</li>
+        </ol>
+        <div class="note">First campaign? Skip — start at Strategy.</div>
+      </div>
+    </li>
+  </ul>
+
+  <h2><img src="https://img.icons8.com/color/48/strategy-board.png" alt="">Strategy</h2>
+  <ul>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/folder-invoices--v1.png" alt=""><span class="label">make campaign shell</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Container in ClientForge / LeadTables for leads + exports.</p>
+        <ol>
+          <li>new shell, or duplicate most-similar past campaign</li>
+          <li>set status = Draft</li>
+          <li>name clearly</li>
+          <li>save</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/light-on--v1.png" alt=""><span class="label">write hypothesis</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">One primary hypothesis. Not a novel.</p>
+        <ol>
+          <li>open campaign → Edit → High-Level Strategy tab</li>
+          <li>fill "Campaign Overview + Hypothesis One-Liner"</li>
+          <li>note: change vs last campaign</li>
+          <li>note: primary metric + what "good" looks like</li>
+          <li>note: why this change should win</li>
+          <li>note: next-step ideas if confirmed vs disproven</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/filter.png" alt=""><span class="label">pick funnel parts (lead magnet, offer)</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Concrete things funnel routes through.</p>
+        <ol>
+          <li>pick lead magnet</li>
+          <li>pick introductory offer</li>
+          <li>confirm flagship offer</li>
+          <li>if reusing — confirm still apply, move on</li>
+          <li>if new lead magnet — run Lead Magnet Master SOP</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/flow-chart.png" alt=""><span class="label">plan funnel flow</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Positive reply → closed client. One-liner per transition.</p>
+        <ol>
+          <li>use Funnel Conversion Strategy Checklist</li>
+          <li>write one-liner per transition point</li>
+          <li>save in CF/LT Campaign Planner → Funnel Config tab</li>
+        </ol>
+        <div class="note">"None" or "keep simple" is fine — must be deliberate, not accidental.</div>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/list--v1.png" alt=""><span class="label">pick sequence structure</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Structure only, no copy yet. Path A or Path B.</p>
+        <ol>
+          <li>Path A — swipe Themeplate Stack (handles structure + themeplate selection)</li>
+          <li>Path B — build from scratch via Sequence Structure Cheat Sheet:</li>
+          <li>· email count (initial + followups)</li>
+          <li>· threading</li>
+          <li>· delays</li>
+          <li>· sending days/times</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/stack-of-photos.png" alt=""><span class="label">pick lead volume</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Drives infra needs in next step.</p>
+        <ol>
+          <li>early loops — aim for ~200 campaign-ready leads</li>
+          <li>otherwise — LeadTables Campaign Forecaster from desired calls/clients</li>
+          <li>no source yet — pond exploration first</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/ab-testing.png" alt=""><span class="label">pick A/B variant count</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">List size determines meaningful variant count.</p>
+        <ol>
+          <li>&lt;400 leads — 0 variants</li>
+          <li>400–500 — 2 variants, big angle differences</li>
+          <li>500–1,499 — 2 variants (sweet spot)</li>
+          <li>1,500–3,000 — up to 3 (A/B/C)</li>
+          <li>3,000+ — ~1 variant per 1,000 leads</li>
+          <li>first campaign — skip is OK</li>
+        </ol>
+        <div class="note">Multi-thread sequences: each thread's initial uses different angle. Followups must work regardless of which initial variant lead got.</div>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/server.png" alt=""><span class="label">check infra capacity</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Followups + initials share daily quota — not simple division.</p>
+        <ol>
+          <li>run sending infrastructure calculator</li>
+          <li>inputs: lead volume, sequence length + delays, target velocity</li>
+          <li>short on accounts — buy now (warmup ~2–3 weeks)</li>
+        </ol>
+      </div>
+    </li>
+  </ul>
+
+  <h2><img src="https://img.icons8.com/color/48/conference-call--v1.png" alt="">List Build</h2>
+  <ul>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/contacts.png" alt=""><span class="label">build lead list</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Lead Ingredients Checklist: Raw Leads → Finalization. Stop before Campaign Exporting.</p>
+        <ol>
+          <li>source raw leads</li>
+          <li>enrich + verify</li>
+          <li>finalize columns</li>
+          <li>defer perso items if approach not yet picked</li>
+        </ol>
+      </div>
+    </li>
+  </ul>
+
+  <h2><img src="https://img.icons8.com/color/48/pen.png" alt="">Copy</h2>
+  <ul>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/law.png" alt=""><span class="label">review spam law</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Decide compliance before drafting, not after.</p>
+        <ol>
+          <li>unsubscribe mechanism / inclusion</li>
+          <li>physical address inclusion</li>
+          <li>GDPR considerations</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/scales.png" alt=""><span class="label">set ethics line</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Keep copy defensibly true. No false depth-of-attention.</p>
+        <ol>
+          <li>decide perso ethics standard</li>
+          <li>decide "I was just on your site..." style line policy</li>
+          <li>unsure — read Personalization Ethics lesson, pick standard</li>
+          <li>adjust themeplates accordingly</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/template.png" alt=""><span class="label">pick themeplates</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Skip if Stack swiped — already chose. Else pick per slot.</p>
+        <ol>
+          <li>browse Themeplates Database (full templates)</li>
+          <li>or Fragments Database (assemble parts)</li>
+          <li>or Examples Database (real-world inspo)</li>
+          <li>or adapt winning copy from past campaign</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/user-male-circle--v1.png" alt=""><span class="label">pick personalization level</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Niche-generic → fully custom per-lead.</p>
+        <ol>
+          <li>pick personalization depth</li>
+          <li>list available variables: {{first_name}}, {{company_name}}, {{website}}, custom columns</li>
+          <li>save list — needed for writing + sender config</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/database.png" alt=""><span class="label">gather perso data</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Only if approach needs data not yet gathered.</p>
+        <ol>
+          <li>circle back to deferred Lead Ingredients items</li>
+          <li>complete Finalization Stage perso steps</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/edit-property.png" alt=""><span class="label">write emails + followups</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">AI-assisted drafting per email slot.</p>
+        <ol>
+          <li>open fresh AI Cold Email Writer chat</li>
+          <li>load CF/LT context via LLM Context Exporter (ICP, offer, LM, funnel, vars)</li>
+          <li>paste themeplate AI prompt → generate draft</li>
+          <li>review + edit (accuracy, tightness, voice)</li>
+          <li>score against Cold Email Scorecard</li>
+          <li>save in CF/LT Campaign → Copy tab</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/split-files.png" alt=""><span class="label">write A/B variants</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Initial emails in new threads = highest leverage to test.</p>
+        <ol>
+          <li>duplicate baseline email per slot you're testing</li>
+          <li>swap angle / hook / substantiation</li>
+          <li>each thread initial → genuinely different angle</li>
+          <li>followups — work regardless of which initial variant lead received</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/star--v1.png" alt=""><span class="label">score copy</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Catch obvious issues before placement testing.</p>
+        <ol>
+          <li>run AI Email Scorer on every email + variant</li>
+          <li>or score manually via Cold Email Scorecard</li>
+          <li>fix low scores</li>
+          <li>re-score until happy</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/checked-checkbox.png" alt=""><span class="label">run deliverability check</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Every-Time Checklist — mechanical rules Scorecard skips.</p>
+        <ol>
+          <li>spam keyword screen</li>
+          <li>no links / attachments / images in pre-reply emails</li>
+          <li>plain text formatting</li>
+          <li>fix anything caught</li>
+        </ol>
+        <div class="note">Spintax bits at bottom of checklist — skip for now, covered later.</div>
+      </div>
+    </li>
+  </ul>
+
+  <h2><img src="https://img.icons8.com/color/48/test-tube.png" alt="">Placement Test</h2>
+  <ul>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/inbox.png" alt=""><span class="label">run inbox placement test</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">MailReach seed inboxes — inbox vs promo vs spam.</p>
+        <ol>
+          <li>follow Inbox Placement Testing SOP end-to-end</li>
+          <li>test every email × every sending inbox combo</li>
+          <li>pass bar: 80%+ on same-provider Professional inboxes</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/spiral-bound-booklet.png" alt=""><span class="label">add spintax</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Copy variation before loading into sender.</p>
+        <ol>
+          <li>scope how much spinning needed</li>
+          <li>pick approach: section / phrase / word / hybrid</li>
+          <li>write variants</li>
+          <li>QA test</li>
+          <li>re-run spam keyword check on spun variants</li>
+        </ol>
+      </div>
+    </li>
+  </ul>
+
+  <h2><img src="https://img.icons8.com/color/48/maintenance.png" alt="">Build Out</h2>
+  <ul>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/export-csv.png" alt=""><span class="label">export leads</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Lead Ingredients — Campaign Exporting Stage.</p>
+        <ol>
+          <li>dedupe contacts</li>
+          <li>associate leads with CF/LT campaign</li>
+          <li>apply sendability filters</li>
+          <li>build exporter view</li>
+          <li>final once-over</li>
+          <li>export CSV</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/upload-to-cloud.png" alt=""><span class="label">upload to sender</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">ReachInbox / Instantly / Smartlead — see SOP for platform specifics.</p>
+        <ol>
+          <li>create campaign in sender</li>
+          <li>upload exported CSV</li>
+          <li>map fields — perso = "custom variable" / "custom field"</li>
+          <li>uncheck dedupe toggles unless reason to keep</li>
+          <li>confirm upload, check error count</li>
+          <li>if forced to map inbox now — drop in placeholder, revisit</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/settings--v1.png" alt=""><span class="label">config campaign + inbox</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Cold Email Infrastructure Deliverability Checklist.</p>
+        <ol>
+          <li>complete Campaign Configuration Stage</li>
+          <li>complete Inbox-Level Sending Volume &amp; Patterns Stage</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/workflow.png" alt=""><span class="label">build sequence in sender</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Just get them in — full testing next step.</p>
+        <ol>
+          <li>paste copy as plain text</li>
+          <li>set sequence delays</li>
+          <li>preview-test variable + spintax syntax</li>
+          <li>add A/B variants</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/test-passed.png" alt=""><span class="label">test emails in sender</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Cold Email Testing &amp; Review Checklist — fix + re-test until clean.</p>
+        <ol>
+          <li>per-email: in-platform preview</li>
+          <li>per-email: send test copies to self</li>
+          <li>per-email: variable / spintax / formatting render correct on desktop + mobile</li>
+          <li>campaign-wide: all sequence steps present</li>
+          <li>campaign-wide: delays + threading correct</li>
+          <li>campaign-wide: A/B variants set up properly</li>
+          <li>campaign-wide: subject lines present where they should, absent where they shouldn't</li>
+        </ol>
+      </div>
+    </li>
+  </ul>
+
+  <h2><img src="https://img.icons8.com/color/48/launched-rocket.png" alt="">Launch</h2>
+  <ul>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/checklist.png" alt=""><span class="label">run pre-send check</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Final at-a-glance check before sending.</p>
+        <ol>
+          <li>risk protection</li>
+          <li>deliverability confirmation</li>
+          <li>spamming avoidance</li>
+          <li>campaign performance basics</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/play--v1.png" alt=""><span class="label">activate campaign</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Hit send.</p>
+        <ol>
+          <li>launch in sender</li>
+          <li>confirm actively sending or queued for next window</li>
+          <li>set reminder to verify first batch goes out as expected</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/marker.png" alt=""><span class="label">mark active in CF/LT</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Sync ClientForge / LeadTables status.</p>
+        <ol>
+          <li>set status = Active</li>
+          <li>set start date = today</li>
+        </ol>
+      </div>
+    </li>
+  </ul>
+
+  <h2><img src="https://img.icons8.com/color/48/binoculars.png" alt="">Monitor</h2>
+  <ul>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/combo-chart--v1.png" alt=""><span class="label">check metrics daily</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Cold Email Campaign-Monitoring Cheat Sheet.</p>
+        <ol>
+          <li>bounce rate — pause + investigate if above threshold</li>
+          <li>open rate (if tracking) — sudden drop = deliverability flag</li>
+          <li>positive reply rate — compare vs benchmarks as volume builds</li>
+          <li>account health — connected, sending, good health scores</li>
+        </ol>
+        <div class="note">Really bad metrics — pause campaign while debugging. Use Performance Debugging Cheat Sheet.</div>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/reply-arrow.png" alt=""><span class="label">handle replies</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Always from sender's unified inbox — never personal inbox.</p>
+        <ol>
+          <li>positive — reply same day, send LM, advance funnel</li>
+          <li>negative — gracious "thanks for letting me know"</li>
+          <li>unsubscribe — mark in sender + add to LT blocklist</li>
+          <li>see Reply-Handling Cheat Sheet for objections / pricing / referrals</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/plant-under-sun.png" alt=""><span class="label">nurture engaged leads</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Engaged but not yet booked / not yet next funnel step.</p>
+        <ol>
+          <li>follow up on LM-received-but-quiet leads</li>
+          <li>follow up on unbooked meetings</li>
+          <li>close out dead leads gracefully</li>
+          <li>early — keep manual / 1:1; later — automate via subsequences</li>
+        </ol>
+      </div>
+    </li>
+    <li>
+      <div class="row"><input type="checkbox"><img class="icon" src="https://img.icons8.com/color/48/synchronize.png" alt=""><span class="label">loop back when done</span><span class="chev">›</span></div>
+      <div class="detail" hidden>
+        <p class="summary">Restart at top after final reply window.</p>
+        <ol>
+          <li>wait 3–4 days after last lead's final followup</li>
+          <li>jump back to Close-Out Stage to post-mortem</li>
+          <li>begin planning next campaign</li>
+        </ol>
+      </div>
+    </li>
+  </ul>
+
+  <div id="instances"></div>
+</main>
+
+<script>
+const KEY='cold-email-checklist-v1';
+const INST_KEY='cold-email-checklist-instances-v1';
+const HIDE_DONE_KEY='cold-email-checklist-hide-done-v1';
+const main=document.querySelector('main');
+const instancesEl=document.getElementById('instances');
+const masterBoxes=[...main.querySelectorAll(':scope > ul input[type=checkbox]')];
+const fill=document.getElementById('fill');
+const count=document.getElementById('count');
+
+const templateSections=[...main.querySelectorAll(':scope > h2, :scope > ul')]
+  .filter(el=>!el.closest('.instance'))
+  .map(el=>el.outerHTML).join('');
+
+function bindTasks(scope,onChange){
+  const items=[...scope.querySelectorAll(':scope > ul > li, :scope > ul li')].filter(li=>li.querySelector(':scope > .row'));
+  items.forEach(li=>{
+    const box=li.querySelector(':scope > .row > input[type=checkbox]');
+    const row=li.querySelector(':scope > .row');
+    const detail=li.querySelector(':scope > .detail');
+    if(!box||!row)return;
+    box.addEventListener('change',onChange);
+    box.addEventListener('click',e=>e.stopPropagation());
+    row.addEventListener('click',e=>{
+      if(e.target===box)return;
+      if(!detail)return;
+      const open=detail.hasAttribute('hidden');
+      if(open){detail.removeAttribute('hidden');li.classList.add('open');}
+      else{detail.setAttribute('hidden','');li.classList.remove('open');}
+    });
+  });
+}
+function paint(boxes,fillEl,countEl){
+  const done=boxes.filter(b=>b.checked).length;
+  const total=boxes.length;
+  fillEl.style.width=(total?done/total*100:0)+'%';
+  countEl.textContent=done+' / '+total;
+  boxes.forEach(b=>{
+    const li=b.closest('li');
+    if(li)li.classList.toggle('done',b.checked);
+  });
+}
+
+function getMasterBoxes(){
+  return [...main.querySelectorAll(':scope > ul > li > .row > input[type=checkbox]')];
+}
+function getInstanceBoxes(card){
+  return [...card.querySelectorAll(':scope > ul > li > .row > input[type=checkbox]')];
+}
+
+const masterBoxesList=getMasterBoxes();
+function saveMaster(){
+  localStorage.setItem(KEY,JSON.stringify(masterBoxesList.map(b=>b.checked)));
+  paint(masterBoxesList,fill,count);
+}
+function loadMaster(){
+  try{
+    const s=JSON.parse(localStorage.getItem(KEY)||'[]');
+    s.forEach((v,i)=>{if(masterBoxesList[i])masterBoxesList[i].checked=v;});
+  }catch{}
+}
+bindTasks(main,saveMaster);
+function reset(){
+  if(!confirm('reset all?'))return;
+  masterBoxesList.forEach(b=>b.checked=false);
+  saveMaster();
+}
+
+function loadInstances(){
+  try{return JSON.parse(localStorage.getItem(INST_KEY)||'[]');}catch{return[];}
+}
+function saveInstances(list){
+  localStorage.setItem(INST_KEY,JSON.stringify(list));
+}
+function fmtStamp(ts){
+  const d=new Date(ts);
+  return d.toLocaleDateString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric'})
+    +' · '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+}
+function renderInstance(inst){
+  const card=document.createElement('section');
+  card.className='instance';
+  card.dataset.id=inst.id;
+  card.innerHTML=`
+    <div class="meta">
+      <span class="stamp">${fmtStamp(inst.ts)}</span>
+      <button class="del">delete</button>
+    </div>
+    <input class="title" type="text" placeholder="Run title (e.g. Q2 SaaS founders)" value="${(inst.title||'').replace(/"/g,'&quot;')}">
+    <textarea class="desc" placeholder="Description / notes / hypothesis...">${(inst.desc||'').replace(/</g,'&lt;')}</textarea>
+    <div class="bar-wrap">
+      <div class="bar"><div class="ifill"></div></div>
+      <div class="count"><span class="icount">0 / 0</span></div>
+    </div>
+    ${templateSections}
+  `;
+  instancesEl.appendChild(card);
+
+  const boxes=getInstanceBoxes(card);
+  const ifill=card.querySelector('.ifill');
+  const icount=card.querySelector('.icount');
+  (inst.state||[]).forEach((v,i)=>{if(boxes[i])boxes[i].checked=v;});
+
+  const persist=()=>{
+    const list=loadInstances();
+    const idx=list.findIndex(x=>x.id===inst.id);
+    if(idx<0)return;
+    list[idx].state=boxes.map(b=>b.checked);
+    list[idx].title=card.querySelector('.title').value;
+    list[idx].desc=card.querySelector('.desc').value;
+    saveInstances(list);
+    paint(boxes,ifill,icount);
+  };
+  bindTasks(card,persist);
+  card.querySelector('.title').addEventListener('input',persist);
+  card.querySelector('.desc').addEventListener('input',persist);
+  card.querySelector('.del').addEventListener('click',()=>{
+    if(!confirm('delete this run?'))return;
+    saveInstances(loadInstances().filter(x=>x.id!==inst.id));
+    card.remove();
+  });
+  paint(boxes,ifill,icount);
+}
+function duplicate(){
+  const inst={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),ts:Date.now(),title:'',desc:'',state:masterBoxesList.map(()=>false)};
+  const list=loadInstances();
+  list.push(inst);
+  saveInstances(list);
+  renderInstance(inst);
+  const cards=instancesEl.querySelectorAll('.instance');
+  const last=cards[cards.length-1];
+  last.scrollIntoView({behavior:'smooth',block:'start'});
+  last.querySelector('.title').focus();
+}
+
+function applyHideDone(){
+  const cb=document.getElementById('hideDone');
+  if(!cb)return;
+  document.body.classList.toggle('hide-completed',cb.checked);
+  try{localStorage.setItem(HIDE_DONE_KEY,cb.checked?'1':'');}catch{}
+}
+(function initHideDone(){
+  const cb=document.getElementById('hideDone');
+  if(!cb)return;
+  try{if(localStorage.getItem(HIDE_DONE_KEY)==='1')cb.checked=true;}catch{}
+  applyHideDone();
+  cb.addEventListener('change',applyHideDone);
+})();
+
+loadMaster();
+paint(masterBoxesList,fill,count);
+loadInstances().forEach(renderInstance);
+</script>
+</body>
+</html>

@@ -24,7 +24,7 @@ export const SECTIONS: Section[] = [
         id: "post-mortem",
         label: "post-mortem last campaign",
         icon: "https://img.icons8.com/color/48/inspection.png",
-        summary: "Run Post-Mortem SOP end-to-end on prior campaign before planning next.",
+        summary: "Run <a href=\"https://doubleyourfreelancing.com/lesson/200kf-tools-cold-email-campaign-post-mortem-sop/\" target=\"_blank\" rel=\"noopener\">Post-Mortem SOP</a> end-to-end on prior campaign before planning next.",
         steps: [
           "log + finalize metrics",
           "add unsubs to blocklist",
@@ -47,7 +47,7 @@ export const SECTIONS: Section[] = [
         icon: "https://img.icons8.com/color/48/folder-invoices--v1.png",
         summary: "Container in ClientForge / LeadTables for leads + exports.",
         steps: [
-          "new shell, or duplicate most-similar past campaign",
+          "new shell, or <a href=\"https://doubleyourfreelancing.com/lesson/leadtables-duplicating-campaigns/\" target=\"_blank\" rel=\"noopener\">duplicate most-similar past campaign</a>",
           "set status = Draft",
           "name clearly",
           "save",
@@ -61,8 +61,8 @@ export const SECTIONS: Section[] = [
         steps: [
           "open campaign → Edit → High-Level Strategy tab",
           "fill \"Campaign Overview + Hypothesis One-Liner\"",
-          "note: change vs last campaign",
-          "note: primary metric + what \"good\" looks like",
+          "note: <a href=\"https://doubleyourfreelancing.com/lesson/200kf-tools-cold-email-ab-test-ideas-database/\" target=\"_blank\" rel=\"noopener\">change vs last campaign</a>",
+          "note: <a href=\"https://doubleyourfreelancing.com/lesson/200kf-tools-positive-reply-rate-cheat-sheet\" target=\"_blank\" rel=\"noopener\">primary metric</a> + what \"good\" looks like",
           "note: why this change should win",
           "note: next-step ideas if confirmed vs disproven",
         ],
@@ -73,11 +73,11 @@ export const SECTIONS: Section[] = [
         icon: "https://img.icons8.com/color/48/filter.png",
         summary: "Concrete things funnel routes through.",
         steps: [
-          "pick lead magnet",
-          "pick introductory offer",
+          "pick <a href=\"https://doubleyourfreelancing.com/lesson/200kf-tools-lead-magnet-cheat-sheet\" target=\"_blank\" rel=\"noopener\">lead magnet</a>",
+          "pick <a href=\"https://doubleyourfreelancing.com/lesson/200kf-tools-introductory-offer-scorecard\" target=\"_blank\" rel=\"noopener\">introductory offer</a>",
           "confirm flagship offer",
           "if reusing — confirm still apply, move on",
-          "if new lead magnet — run Lead Magnet Master SOP",
+          "if new lead magnet — run <a href=\"https://doubleyourfreelancing.com/lesson/200kf-tools-lead-magnet-master-sop\" target=\"_blank\" rel=\"noopener\">Lead Magnet Master SOP</a>",
         ],
       },
       {
@@ -86,9 +86,9 @@ export const SECTIONS: Section[] = [
         icon: "https://img.icons8.com/color/48/flow-chart.png",
         summary: "Positive reply → closed client. One-liner per transition.",
         steps: [
-          "use Funnel Conversion Strategy Checklist",
+          "use <a href=\"https://doubleyourfreelancing.com/lesson/200kf-tools-funnel-conversion-strategy-checklist\" target=\"_blank\" rel=\"noopener\">Funnel Conversion Strategy Checklist</a>",
           "write one-liner per transition point",
-          "save in CF/LT Campaign Planner → Funnel Config tab",
+          "save in CF/LT Campaign Planner → <a href=\"https://doubleyourfreelancing.com/lesson/leadtables-campaign-funnel-config/\" target=\"_blank\" rel=\"noopener\">Funnel Config tab</a>",
         ],
         note: "\"None\" or \"keep simple\" is fine — must be deliberate, not accidental.",
       },
@@ -98,8 +98,8 @@ export const SECTIONS: Section[] = [
         icon: "https://img.icons8.com/color/48/list--v1.png",
         summary: "Structure only, no copy yet. Path A or Path B.",
         steps: [
-          "Path A — swipe Themeplate Stack (handles structure + themeplate selection)",
-          "Path B — build from scratch via Sequence Structure Cheat Sheet:",
+          "Path A — swipe <a href=\"https://doubleyourfreelancing.com/lesson/200kf-tools-cold-email-campaign-themeplate-stacks-db\" target=\"_blank\" rel=\"noopener\">Themeplate Stack</a> (handles structure + themeplate selection)",
+          "Path B — build from scratch via <a href=\"https://doubleyourfreelancing.com/lesson/200kf-tools-cold-email-sequence-structure-cheat-sheet\" target=\"_blank\" rel=\"noopener\">Sequence Structure Cheat Sheet</a>:",
           "· email count (initial + followups)",
           "· threading",
           "· delays",
@@ -113,15 +113,15 @@ export const SECTIONS: Section[] = [
         summary: "Drives infra needs in next step.",
         steps: [
           "early loops — aim for ~200 campaign-ready leads",
-          "otherwise — LeadTables Campaign Forecaster from desired calls/clients",
-          "no source yet — pond exploration first",
+          "otherwise — <a href=\"https://leadtables.io/tools/forecaster\" target=\"_blank\" rel=\"noopener\">LeadTables Campaign Forecaster</a> from desired calls/clients",
+          "no source yet — <a href=\"https://doubleyourfreelancing.com/lesson/200kf-tools-pond-exploration-sop/\" target=\"_blank\" rel=\"noopener\">pond exploration</a> first",
         ],
       },
       {
         id: "ab-variants",
         label: "pick A/B variant count",
         icon: "https://img.icons8.com/color/48/ab-testing.png",
-        summary: "List size determines meaningful variant count.",
+        summary: "List size determines meaningful <a href=\"https://doubleyourfreelancing.com/lesson/200kf-tools-cold-email-ab-test-ideas-database/\" target=\"_blank\" rel=\"noopener\">variant count</a>.",
         steps: [
           "<400 leads — 0 variants",
           "400–500 — 2 variants, big angle differences",

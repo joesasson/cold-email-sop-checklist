@@ -7,6 +7,8 @@ import {
   type Run,
 } from "../storage";
 
+const HIDE_DONE_KEY = "cold-email-sop-hide-completed-v1";
+
 function fmtStamp(ts: number) {
   const d = new Date(ts);
   return (
@@ -54,13 +56,21 @@ function ItemRow({
       </div>
       {open && (
         <div className="detail">
-          <p className="summary">{item.summary}</p>
+          <p
+            className="summary"
+            dangerouslySetInnerHTML={{ __html: item.summary }}
+          />
           <ol>
             {item.steps.map((s, i) => (
-              <li key={i}>{s}</li>
+              <li key={i} dangerouslySetInnerHTML={{ __html: s }} />
             ))}
           </ol>
-          {item.note && <div className="note">{item.note}</div>}
+          {item.note && (
+            <div
+              className="note"
+              dangerouslySetInnerHTML={{ __html: item.note }}
+            />
+          )}
         </div>
       )}
     </li>
@@ -73,6 +83,21 @@ export default function RunPage() {
   const [run, setRun] = useState<Run | null>(null);
   const [openKeys, setOpenKeys] = useState<Set<string>>(new Set());
   const [notFound, setNotFound] = useState(false);
+  const [hideCompleted, setHideCompleted] = useState(() => {
+    try {
+      return localStorage.getItem(HIDE_DONE_KEY) === "1";
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(HIDE_DONE_KEY, hideCompleted ? "1" : "");
+    } catch {
+      /* ignore */
+    }
+  }, [hideCompleted]);
 
   useEffect(() => {
     if (!id) return;
@@ -152,7 +177,7 @@ export default function RunPage() {
   }
 
   return (
-    <main>
+    <main className={hideCompleted ? "hide-completed" : undefined}>
       <div className="top-bar">
         <Link to="/" className="back-link">
           ← all runs
@@ -190,6 +215,17 @@ export default function RunPage() {
             {done} / {total}
           </span>
           <div className="actions">
+            <label
+              className="hide-done"
+              title="Hide checked rows"
+            >
+              <input
+                type="checkbox"
+                checked={hideCompleted}
+                onChange={(e) => setHideCompleted(e.target.checked)}
+              />
+              hide completed
+            </label>
             <button className="reset" onClick={resetRun}>
               reset
             </button>
